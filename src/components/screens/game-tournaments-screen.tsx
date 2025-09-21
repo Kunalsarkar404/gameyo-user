@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { 
-  ArrowLeft, Trophy, Users, Clock, Target, MapPin, 
-  Wifi, WifiOff, Filter, Search, Calendar, DollarSign 
+import {
+  ArrowLeft, Trophy, Users, Clock, Target, MapPin,
+  Wifi, WifiOff, Filter, Search, Calendar, DollarSign
 } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
@@ -115,12 +115,12 @@ export function GameTournamentsScreen({ game, onBack, onTournamentSelect }: Game
     const now = new Date();
     const end = new Date(deadline);
     const diff = end.getTime() - now.getTime();
-    
+
     if (diff <= 0) return "Ended";
-    
+
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    
+
     if (days > 0) return `${days}d ${hours}h`;
     return `${hours}h`;
   };
@@ -136,13 +136,13 @@ export function GameTournamentsScreen({ game, onBack, onTournamentSelect }: Game
 
   const filteredTournaments = tournaments.filter(tournament => {
     const matchesSearch = tournament.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         tournament.organizer.toLowerCase().includes(searchQuery.toLowerCase());
-    
+      tournament.organizer.toLowerCase().includes(searchQuery.toLowerCase());
+
     if (!matchesSearch) return false;
-    
+
     if (filterType === 'online') return tournament.type === 'online';
     if (filterType === 'offline') return tournament.type === 'offline';
-    
+
     return true;
   });
 
@@ -207,14 +207,14 @@ export function GameTournamentsScreen({ game, onBack, onTournamentSelect }: Game
           const registrationProgress = (tournament.currentTeams / tournament.maxTeams) * 100;
 
           return (
-            <Card 
-              key={tournament.id} 
+            <Card
+              key={tournament.id}
               className="glass-card overflow-hidden relative cursor-pointer hover:shadow-lg transition-all duration-200"
               onClick={() => onTournamentSelect(tournament)}
             >
               {/* Background */}
               {gameBackground && (
-                <div 
+                <div
                   className="absolute inset-0 opacity-20"
                   style={{
                     backgroundImage: `url(${gameBackground})`,
@@ -224,7 +224,7 @@ export function GameTournamentsScreen({ game, onBack, onTournamentSelect }: Game
                 />
               )}
               <div className={`absolute inset-0 bg-gradient-to-br ${gameGradient}`} />
-              
+
               <CardContent className="p-4 relative z-10">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
@@ -311,8 +311,8 @@ export function GameTournamentsScreen({ game, onBack, onTournamentSelect }: Game
                   <div className="text-sm text-muted-foreground">
                     By {tournament.organizer}
                   </div>
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     disabled={tournament.status === 'full'}
                     className="bg-primary text-primary-foreground hover:bg-primary/90"
                   >

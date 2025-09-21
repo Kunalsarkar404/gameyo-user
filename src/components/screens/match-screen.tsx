@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Filter, Search, Trophy, Users, Clock, MapPin, Target } from 'lucide-react';
+import { Filter, Search, Trophy, Users, Clock, MapPin, Target, Plus } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -9,9 +9,10 @@ import { getGameBackground, getGameGradient } from '../utils/game-backgrounds';
 
 interface MatchScreenProps {
   initialFilter?: string;
+  onCreateMatch?: () => void;
 }
 
-export function MatchScreen({ initialFilter = 'all' }: MatchScreenProps) {
+export function MatchScreen({ initialFilter = 'all', onCreateMatch }: MatchScreenProps) {
   const [activeFilter, setActiveFilter] = useState(initialFilter);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -113,31 +114,31 @@ export function MatchScreen({ initialFilter = 'all' }: MatchScreenProps) {
     const start = new Date(startTime);
     const now = new Date();
     const diff = start.getTime() - now.getTime();
-    
+
     if (diff <= 0) return "Started";
-    
+
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    
+
     if (hours > 24) {
       const days = Math.floor(hours / 24);
       return `${days}d ${hours % 24}h`;
     }
-    
+
     return `${hours}h ${minutes}m`;
   };
 
   const filteredMatches = matches.filter(match => {
     const matchesSearch = match.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         match.game.toLowerCase().includes(searchQuery.toLowerCase());
-    
+      match.game.toLowerCase().includes(searchQuery.toLowerCase());
+
     if (activeFilter === 'all') return matchesSearch;
     if (activeFilter === 'featured') return matchesSearch && match.featured;
     if (activeFilter === 'mobile') return matchesSearch && match.platform === 'Mobile';
     if (activeFilter === 'pc') return matchesSearch && match.platform === 'PC';
     if (activeFilter === 'online') return matchesSearch && match.type === 'Online';
     if (activeFilter === 'offline') return matchesSearch && match.type === 'Offline';
-    
+
     return matchesSearch;
   });
 
@@ -147,9 +148,15 @@ export function MatchScreen({ initialFilter = 'all' }: MatchScreenProps) {
       <div className="bg-card border-b border-border p-4">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-bold">Matches</h1>
-          <Button variant="ghost" size="icon">
-            <Filter size={20} />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon">
+              <Filter size={20} />
+            </Button>
+            <Button size="sm" onClick={onCreateMatch} className="flex items-center gap-1">
+              <Plus size={16} />
+              Create Match
+            </Button>
+          </div>
         </div>
 
         {/* Search */}
@@ -197,19 +204,19 @@ export function MatchScreen({ initialFilter = 'all' }: MatchScreenProps) {
             {filteredMatches.map((match) => {
               const gameBackground = getGameBackground(match.game);
               const gameGradient = getGameGradient(match.game);
-              
+
               return (
                 <Card key={match.id} className="glass-card hover:shadow-lg transition-all duration-200 overflow-hidden relative">
                   {/* Game Background Image */}
                   {gameBackground && (
-                    <div 
+                    <div
                       className="absolute inset-0 opacity-20 bg-cover bg-center bg-no-repeat"
                       style={{ backgroundImage: `url(${gameBackground})` }}
                     />
                   )}
                   {/* Game Gradient Overlay */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${gameGradient}`} />
-                  
+
                   <CardContent className="p-4 relative z-10">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
@@ -270,7 +277,7 @@ export function MatchScreen({ initialFilter = 'all' }: MatchScreenProps) {
 
                     <div className="flex items-center justify-between pt-3 border-t border-border">
                       <div className="text-sm text-muted-foreground">
-                        By {match.organizer} • {match.commission} commission
+                        By {match.organizer}
                       </div>
                       <Button size="sm" className="bg-primary text-primary-foreground">
                         Join Now

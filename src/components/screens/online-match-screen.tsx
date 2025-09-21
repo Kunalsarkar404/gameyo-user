@@ -205,12 +205,12 @@ export function OnlineMatchScreen({ onBack }: OnlineMatchScreenProps) {
               {featuredMatches.map((match) => {
                 const gameBackground = getGameBackground(match.game);
                 const gameGradient = getGameGradient(match.game);
-                
+
                 return (
                   <Card key={match.id} className="border-0 bg-card/50 rounded-2xl overflow-hidden relative">
                     {/* Game Background Image */}
                     {gameBackground && (
-                      <div 
+                      <div
                         className="absolute inset-0 opacity-15 bg-cover bg-center bg-no-repeat"
                         style={{ backgroundImage: `url(${gameBackground})` }}
                       />
@@ -237,8 +237,8 @@ export function OnlineMatchScreen({ onBack }: OnlineMatchScreenProps) {
                           </div>
 
                           <div className="flex items-center gap-2 mb-4">
-                            <Badge 
-                              variant="outline" 
+                            <Badge
+                              variant="outline"
                               className={`text-xs ${getDifficultyColor(match.difficulty)}`}
                             >
                               {match.difficulty}
@@ -246,8 +246,8 @@ export function OnlineMatchScreen({ onBack }: OnlineMatchScreenProps) {
                             <Badge variant="outline" className="text-xs">
                               {match.mode}
                             </Badge>
-                            <Badge 
-                              variant="outline" 
+                            <Badge
+                              variant="outline"
                               className={`text-xs ${getStatusColor(match.status)}`}
                             >
                               {match.status === 'filling' ? 'Filling Up' : 'Upcoming'}
@@ -282,8 +282,8 @@ export function OnlineMatchScreen({ onBack }: OnlineMatchScreenProps) {
                               <span>{getProgressPercentage(match.participants).toFixed(0)}% Full</span>
                             </div>
                             <div className="w-full bg-muted rounded-full h-2">
-                              <div 
-                                className="bg-primary h-2 rounded-full transition-all duration-300" 
+                              <div
+                                className="bg-primary h-2 rounded-full transition-all duration-300"
                                 style={{ width: `${getProgressPercentage(match.participants)}%` }}
                               />
                             </div>
@@ -315,12 +315,12 @@ export function OnlineMatchScreen({ onBack }: OnlineMatchScreenProps) {
                       <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-xl">
                         {match.gameIcon}
                       </div>
-                      
+
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <h3 className="font-semibold">{match.title}</h3>
-                          <Badge 
-                            variant="outline" 
+                          <Badge
+                            variant="outline"
                             className={`text-xs ${getDifficultyColor(match.difficulty)}`}
                           >
                             {match.difficulty}

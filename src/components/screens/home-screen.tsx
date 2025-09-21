@@ -13,13 +13,19 @@ interface HomeScreenProps {
   onCreateMatch?: () => void;
   onTournamentSelect?: (tournament: any) => void;
   onViewAllTournaments?: () => void;
+  onGameSelect?: (game: string) => void;
 }
 
-export function HomeScreen({ onQuickMatch, onOnlineMatches, onOfflineMatches, onCreateMatch, onTournamentSelect, onViewAllTournaments }: HomeScreenProps) {
+export function HomeScreen({ onQuickMatch, onOnlineMatches, onOfflineMatches, onCreateMatch, onTournamentSelect, onViewAllTournaments, onGameSelect }: HomeScreenProps) {
   const promoImages = [
     "https://images.unsplash.com/photo-1675310854573-c5c8e4089426?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnYW1pbmclMjB0b3VybmFtZW50JTIwZXNwb3J0c3xlbnwxfHx8fDE3NTc5NTg3MTF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     "https://images.unsplash.com/photo-1559984430-c12e199879b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBnYW1pbmclMjBjb250cm9sbGVyfGVufDF8fHx8MTc1ODAwMDQzOXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
   ];
+
+  // Helper function to check if icon is a URL
+  const isImageUrl = (icon: string) => {
+    return icon && (icon.startsWith('http') || icon.startsWith('https') || icon.startsWith('/'));
+  };
 
   const featuredTournaments = [
     {
@@ -118,7 +124,7 @@ export function HomeScreen({ onQuickMatch, onOnlineMatches, onOfflineMatches, on
     {
       id: 2,
       title: "Free Fire Weekly",
-      game: "Free Fire", 
+      game: "Free Fire",
       mode: "Solo",
       status: "live",
       startTime: "Live Now",
@@ -195,8 +201,8 @@ export function HomeScreen({ onQuickMatch, onOnlineMatches, onOfflineMatches, on
                     </p>
                   </div>
                 </div>
-                <Button 
-                  size="sm" 
+                <Button
+                  size="sm"
                   className="bg-red-500 hover:bg-red-600 text-white"
                   onClick={() => onTournamentSelect?.(featuredTournaments.find(t => t.status === 'live'))}
                 >
@@ -207,28 +213,58 @@ export function HomeScreen({ onQuickMatch, onOnlineMatches, onOfflineMatches, on
           </Card>
         )}
 
-        {/* Quick Actions */}
+        {/* Popular Games */}
         <div className="space-y-3">
-          <h2 className="text-lg font-semibold">Quick Actions</h2>
-          <div className="grid grid-cols-3 gap-3">
-            {quickActions.map((action, index) => {
-              const Icon = action.icon;
-              const isQuickMatch = action.label === "Quick Match";
-              const isCreateMatch = action.label === "Create Match";
-              return (
-                <Button
-                  key={index}
-                  variant="ghost"
-                  className="h-auto p-4 flex flex-col items-center gap-2 hover:bg-accent/50"
-                  onClick={isQuickMatch ? onQuickMatch : isCreateMatch ? onCreateMatch : undefined}
-                >
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${action.bgColor}`}>
-                    <Icon size={24} className={action.color} />
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              <span className="text-2xl">🎮</span>
+              Popular Games
+            </h2>
+            <Button variant="ghost" size="sm" onClick={onViewAllTournaments}>
+              View All
+            </Button>
+          </div>
+          <div className="flex gap-3 overflow-x-auto pb-2">
+            {[
+              { name: "BGMI", icon: "https://i.pinimg.com/474x/8e/b6/9b/8eb69b94dea2520d716629c67f48934c.jpg", fallbackIcon: "🎯", tournaments: 15, color: "from-purple-500/20 to-gray-500/20", gradient: "from-blue-500 to-cyan-500" },
+              { name: "Free Fire", icon: "https://i.pinimg.com/736x/40/01/d9/4001d9f7fedb896b93baf041c0c33e6a.jpg", fallbackIcon: "🔥", tournaments: 10, color: "from-purple-500/20 to-gray-500/20", gradient: "from-orange-500 to-red-500" },
+              { name: "COD Mobile", icon: "https://i.pinimg.com/736x/c7/4e/5b/c74e5bf57d250c1bfc7b0d96f39f42c7.jpg", fallbackIcon: "⚔️", tournaments: 8, color: "from-purple-500/20 to-gray-500/20", gradient: "from-purple-500 to-pink-500" },
+              { name: "Valorant", icon: "https://i.pinimg.com/1200x/39/dc/66/39dc66a4fbaa85dcd12a49f216b60ead.jpg", fallbackIcon: "🎮", tournaments: 6, color: "from-purple-500/20 to-gray-500/20", gradient: "from-green-500 to-teal-500" },
+              { name: "CS2", icon: "https://i.pinimg.com/736x/3c/1e/87/3c1e871625f3c31c9b7d10ed179205e9.jpg", fallbackIcon: "💀", tournaments: 4, color: "from-purple-500/20 to-gray-500/20", gradient: "from-gray-500 to-slate-500" }
+            ].map((game, index) => (
+              <Card
+                key={index}
+                className={`flex-shrink-0 w-32 cursor-pointer hover:scale-105 transition-all duration-200 border-0 bg-gradient-to-br ${game.color} relative overflow-hidden group`}
+                onClick={() => onGameSelect?.(game.name)}
+              >
+                <div className={`absolute inset-0 bg-gradient-to-br ${game.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
+                <CardContent className="p-4 text-center relative z-10">
+                  {/* Centered icon container */}
+                  <div className="mb-2 flex justify-center items-center transform group-hover:scale-110 transition-transform duration-200">
+                    {isImageUrl(game.icon) ? (
+                      <ImageWithFallback
+                        src={game.icon}
+                        alt={`${game.name} icon`}
+                        fallback={
+                          <div className="w-12 h-12 rounded-lg bg-muted/50 flex items-center justify-center text-2xl">
+                            {game.fallbackIcon || '🎮'}
+                          </div>
+                        }
+                        className="w-12 h-12 rounded-lg object-cover border border-border/30 bg-muted/20 mx-auto"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-lg bg-muted/50 flex items-center justify-center text-2xl">
+                        {game.icon}
+                      </div>
+                    )}
                   </div>
-                  <span className="text-sm text-center font-medium">{action.label}</span>
-                </Button>
-              );
-            })}
+                  <h3 className="font-medium text-sm mb-1">{game.name}</h3>
+                  <Badge variant="outline" className="text-xs">
+                    {game.tournaments} active
+                  </Badge>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
 
@@ -236,7 +272,7 @@ export function HomeScreen({ onQuickMatch, onOnlineMatches, onOfflineMatches, on
         <div className="space-y-3">
           <h2 className="text-lg font-semibold">Match Categories</h2>
           <div className="grid grid-cols-2 gap-3">
-            <Card 
+            <Card
               className="border-0 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-2xl cursor-pointer hover:scale-105 transition-all duration-200"
               onClick={onOnlineMatches}
             >
@@ -252,7 +288,7 @@ export function HomeScreen({ onQuickMatch, onOnlineMatches, onOfflineMatches, on
               </CardContent>
             </Card>
 
-            <Card 
+            <Card
               className="border-0 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-2xl cursor-pointer hover:scale-105 transition-all duration-200"
               onClick={onOfflineMatches}
             >
@@ -286,8 +322,8 @@ export function HomeScreen({ onQuickMatch, onOnlineMatches, onOfflineMatches, on
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-semibold text-sm">{match.title}</h3>
-                        <Badge 
-                          variant={match.status === 'live' ? 'destructive' : 'secondary'} 
+                        <Badge
+                          variant={match.status === 'live' ? 'destructive' : 'secondary'}
                           className="text-xs"
                         >
                           {match.status === 'live' ? 'LIVE' : match.mode}
@@ -300,7 +336,7 @@ export function HomeScreen({ onQuickMatch, onOnlineMatches, onOfflineMatches, on
                       <p className="text-sm font-bold text-primary">{match.entryFee}</p>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="flex items-center gap-1">
@@ -337,14 +373,14 @@ export function HomeScreen({ onQuickMatch, onOnlineMatches, onOfflineMatches, on
               View All
             </Button>
           </div>
-          
+
           {/* Featured Tournament Cards */}
           <div className="space-y-3">
             {featuredTournaments.slice(0, 3).map((tournament) => {
               const gameBackground = getGameBackground(tournament.game);
               const gameGradient = getGameGradient(tournament.game);
               const registrationProgress = (tournament.currentTeams / tournament.maxTeams) * 100;
-              
+
               const getStatusColor = (status: string) => {
                 switch (status) {
                   case 'open': return 'bg-green-500/20 text-green-400 border-green-400/30';
@@ -353,16 +389,16 @@ export function HomeScreen({ onQuickMatch, onOnlineMatches, onOfflineMatches, on
                   default: return 'bg-gray-500/20 text-gray-400 border-gray-400/30';
                 }
               };
-              
+
               return (
-                <Card 
-                  key={tournament.id} 
+                <Card
+                  key={tournament.id}
                   className="glass-card hover:shadow-lg transition-all duration-200 overflow-hidden relative cursor-pointer hover:scale-[1.02]"
                   onClick={() => onTournamentSelect?.(tournament)}
                 >
                   {/* Game Background Image */}
                   {gameBackground && (
-                    <div 
+                    <div
                       className="absolute inset-0 opacity-20"
                       style={{
                         backgroundImage: `url(${gameBackground})`,
@@ -373,7 +409,7 @@ export function HomeScreen({ onQuickMatch, onOnlineMatches, onOfflineMatches, on
                   )}
                   {/* Game Gradient Overlay */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${gameGradient}`} />
-                  
+
                   <CardContent className="p-4 relative z-10">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
@@ -416,13 +452,13 @@ export function HomeScreen({ onQuickMatch, onOnlineMatches, onOfflineMatches, on
                         </span>
                       </div>
                       <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
-                        <div 
+                        <div
                           className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-300"
                           style={{ width: `${Math.min(registrationProgress, 100)}%` }}
                         />
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
                         <div className="text-center">
@@ -442,8 +478,8 @@ export function HomeScreen({ onQuickMatch, onOnlineMatches, onOfflineMatches, on
                           </p>
                         </div>
                       </div>
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         disabled={tournament.status === 'full'}
                         className={`${tournament.status === 'live' ? 'bg-red-500 hover:bg-red-600' : 'bg-primary hover:bg-primary/90'} text-white`}
                       >

@@ -1,5 +1,0 @@
-Removing old tournament files that are no longer needed:
-- tournament-screen.tsx (replaced by match-screen.tsx)
-- online-tournament-screen.tsx (replaced by online-match-screen.tsx)  
-- offline-tournament-screen.tsx (replaced by offline-match-screen.tsx)
-- create-tournament-screen.tsx (replaced by create-match-screen.tsx)
